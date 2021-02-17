@@ -4,7 +4,7 @@ import java.io.Serializable;
  * An object representing a product in a grocery store. Has fields such as name,
  * id, stock, price and reOrderLevel.
  * 
- * @author Vincent Peterson
+ * @author Vincent Peterson, Michael Olson
  *
  */
 public class Product implements Serializable {
