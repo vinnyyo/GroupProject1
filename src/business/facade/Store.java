@@ -1,6 +1,8 @@
 package business.facade;
 
-public class Store {
+import java.io.Serializable;
+
+public class Store implements Serializable {
 
 	private static Store store;
 
