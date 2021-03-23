@@ -1,3 +1,4 @@
+package business.entities;
 import java.io.Serializable;
 
 /**
