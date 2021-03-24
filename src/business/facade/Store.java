@@ -3,7 +3,7 @@ package business.facade;
 import business.facade.Request;
 import business.facade.Result;
 import business.entities.Member;
-import business.entities.Order;
+import business.entities.PendingOrders;
 import business.entities.OrderItem;
 import business.entities.Product;
 

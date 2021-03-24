@@ -1,55 +1,37 @@
 package business.entities;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class OrderItem {
+public class OrderItem implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Product orderItem;
-	private Long productId;
 	private int quantity;
-	private double price;
-	private Integer orderId;
+	private int orderId;
 	private Date createdDate;
 
-	public OrderItem() {
-		
-	}
-	public OrderItem(Product orderItem, Long productId, int quantity, double price, Integer orderId,
-			Date createdDate) {
-		super();
+	public OrderItem(Product orderItem, int quantity, int orderId) {
+		Date date = new Date(System.currentTimeMillis());
 		this.orderItem = orderItem;
-		this.productId = productId;
 		this.quantity = quantity;
-		this.price = price;
 		this.orderId = orderId;
-		this.createdDate = createdDate;
+		this.createdDate = date;
 	}
-	
+
 	/**
 	 * @return the orderItemId
 	 */
-	public Product getOrderItemId() {
+	public Product getOrderItem() {
 		return orderItem;
 	}
 
 	/**
 	 * @param orderItemId the orderItemId to set
 	 */
-	public void setOrderItemId(Product orderItem) {
+	public void setOrderItem(Product orderItem) {
 		this.orderItem = orderItem;
-	}
-
-	/**
-	 * @return the productId
-	 */
-	public Long getProductId() {
-		return productId;
-	}
-
-	/**
-	 * @param productId the productId to set
-	 */
-	public void setProductId(Long productId) {
-		this.productId = productId;
 	}
 
 	/**
@@ -64,20 +46,6 @@ public class OrderItem {
 	 */
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
-	}
-
-	/**
-	 * @return the price
-	 */
-	public double getPrice() {
-		return price;
-	}
-
-	/**
-	 * @param price the price to set
-	 */
-	public void setPrice(double price) {
-		this.price = price;
 	}
 
 	/**
@@ -106,5 +74,23 @@ public class OrderItem {
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public String getDate() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(createdDate);
+	}
+
+	public boolean addOrder() {
+		orderItem.setStock(orderItem.getStock() + quantity);
+		return true;
+	}
+
+	public boolean matchesId(int id) {
+		return orderId == id;
+	}
+
+	public String toString() {
+		return orderId + "\t" + orderItem.getName() + "\t" + this.getDate() + "\t" + quantity;
 	}
 }
