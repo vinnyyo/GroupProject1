@@ -4,6 +4,11 @@ import java.util.Iterator;
 import business.entities.Member;
 import business.facade.Result;
 
+/**
+ * Safe Iterator for Member lists
+ * @author Michael Olson
+ *
+ */
 public class SafeMemberIterator extends SafeIterator<Member> {
 
 	public SafeMemberIterator(Iterator<Member> iterator) {

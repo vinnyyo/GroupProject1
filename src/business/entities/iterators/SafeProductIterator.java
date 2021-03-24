@@ -4,6 +4,11 @@ import java.util.Iterator;
 import business.entities.Product;
 import business.facade.Result;
 
+/**
+ * Safe iterator for Product lists
+ * @author Michael Olson
+ *
+ */
 public class SafeProductIterator extends SafeIterator<Product> {
 
 	public SafeProductIterator(Iterator<Product> iterator) {

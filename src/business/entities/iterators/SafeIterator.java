@@ -4,6 +4,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import business.facade.Result;
 
+/**
+ * Safe iterator base class. Copies the information instead of sending objects
+ * @author Michael Olson
+ *
+ * @param <T> The type of object we are going to iterate
+ */
 public abstract class SafeIterator<T> implements Iterator<Result> {
 	private Iterator<T> iterator;
 	private Result result = new Result();

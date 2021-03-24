@@ -164,14 +164,13 @@ public class Store implements Serializable {
 	}
 	
 	/**
-	 * Adds a product to the catalog and orders 2x restock level
+	 * Adds a product to the catalog and orders 2x re-stock level
 	 * @param request
 	 * @return either a Result.OPERATION_SUCCESSFUL with product info or 
 	 * Result.OPERATION_FAILURE if there was an error
 	 */
 	public Result addProduct(Request request) {
 		Result newResult = new Result();
-		//String name, String id, int stock, double price, int reOrderLevel
 		Product product = new Product(request.getProductName(),
 									  request.getProductId(),
 									  request.getProductStock(),
