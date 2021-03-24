@@ -1,8 +1,12 @@
 package business.entities;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Date;
 
-public class Member {
+public class Member implements Serializable {
 
 	/**
 	 * id, an integer that uniquely identifies the Member object.
@@ -66,5 +70,20 @@ public class Member {
 	public long getFees() {
 		return fees;
 	}
+	
+	public int getIdCounter() {
+		return idCounter;
+	}
+	
+    public static void save(ObjectOutputStream output) throws IOException {
+        output.writeObject(idCounter);
+    }
 
+    public static void retrieve(ObjectInputStream input) throws IOException, ClassNotFoundException {
+        idCounter = (int) input.readObject();
+    }
+	
+	public boolean matchesID(int id) {
+		return (id == this.id);
+	}
 }

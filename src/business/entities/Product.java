@@ -94,6 +94,14 @@ public class Product implements Serializable {
 		this.reOrderLevel = reOrderLevel;
 	}
 	
+	public boolean matchesName(String name) {
+		return (name.equalsIgnoreCase(this.name));
+	}
+	
+	public boolean matchesID(String id) {
+		return (id.equalsIgnoreCase(this.id));
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
