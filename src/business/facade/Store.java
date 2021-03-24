@@ -1,11 +1,9 @@
 package business.facade;
 
-import business.facade.Request;
-import business.facade.Result;
 import business.entities.Member;
-import business.entities.Order;
-import business.entities.OrderItem;
 import business.entities.Product;
+import business.entities.iterators.SafeMemberIterator;
+import business.entities.iterators.SafeProductIterator;
 
 import java.util.List;
 import java.util.Iterator;
@@ -210,11 +208,28 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
-	public List<Result> getProductList() {
-		List<Result> resultList = new LinkedList<Result>();
-		
-	}
+    /**
+     * Returns an iterator to Member info. The Iterator returned is a safe one, in
+     * the sense that only copies of the Member fields are assembled into the
+     * objects returned via next().
+     * 
+     * @return an Iterator to Result - only the Member fields are valid.
+     */
+    public Iterator<Result> getMembers() {
+        return new SafeMemberIterator(memberList.iterator());
+    }
 	
+    /**
+     * Returns an iterator to Product info. The Iterator returned is a safe one, in
+     * the sense that only copies of the Product fields are assembled into the
+     * objects returned via next().
+     * 
+     * @return an Iterator to Result - only the Product fields are valid.
+     */
+    public Iterator<Result> getProduct() {
+        return new SafeProductIterator(catalog.iterator());
+    }
+
     /**
      * Retrieves store data from disk
      * 
