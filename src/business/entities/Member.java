@@ -7,15 +7,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Member implements Serializable {
-
+	private static final long serialVersionUID = 1L;
 	/**
 	 * id, an integer that uniquely identifies the Member object.
 	 */
 	private int id = 0;
 	private String name;
 	private String phoneNumber;
+	private String address;
 	private Date joinDate;
-	private long fees;
+	private double fees;
 
 	/**
 	 * A static field (say, idCounter) to generate the value to be stored in id.
@@ -25,10 +26,11 @@ public class Member implements Serializable {
 	 */
 	private static int idCounter = 1;
 
-	public Member(String name, String phoneNumber, Date joinDate,
-			long fees) {
+	public Member(String name, String address, String phoneNumber, Date joinDate,
+			double fees) {
 		super();
 		this.name = name;
+		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.joinDate = joinDate;
 		this.fees = fees;
@@ -65,9 +67,17 @@ public class Member implements Serializable {
 	}
 
 	/**
+	 * 
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+	
+	/**
 	 * @return the fees
 	 */
-	public long getFees() {
+	public double getFees() {
 		return fees;
 	}
 	

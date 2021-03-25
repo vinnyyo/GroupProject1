@@ -6,6 +6,9 @@ import business.entities.Member;
 import business.entities.PendingOrders;
 import business.entities.OrderItem;
 import business.entities.Product;
+import business.entities.iterators.SafeIterator;
+import business.entities.iterators.SafeMemberIterator;
+import business.entities.iterators.SafeProductIterator;
 
 import java.util.List;
 import java.util.Iterator;
@@ -133,15 +136,18 @@ public class Store implements Serializable {
 	public Result enrollMember(Request request) {
 		Result newResult = new Result();
 		Member newMember = new Member(request.getMemberName(), 
+									  request.getMemberAddress(),
 									  request.getMemberPhoneNumber(),
 									  request.getMemberJoinDate(),
 									  request.getMemberFees());
 		
 		if (memberList.addMember(newMember)) {
-			newResult.setStatus(Result.OPERATION_SUCCESSFUL);
+			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
+			newResult.setStatus(Result.MEMBER_ADDED);
 			newResult.setMember(newMember);
 		} else {
-			newResult.setStatus(Result.OPERATION_FAILURE);
+			newResult.setSuccess(Result.OPERATION_FAILURE);
+			newResult.setStatus(Result.MEMBER_FOUND);
 		}
 		return newResult;
 	}
@@ -157,10 +163,12 @@ public class Store implements Serializable {
 		Member member = memberList.search(request.getMemberId());
 		if (member != null) {
 			newResult.setMember(member);
-			newResult.setStatus(Result.OPERATION_SUCCESSFUL);
+			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
+			newResult.setStatus(Result.MEMBER_REMOVED);
 			memberList.removeMember(member.getId());
 		} else {
-			newResult.setStatus(Result.OPERATION_FAILURE);
+			newResult.setSuccess(Result.OPERATION_FAILURE);
+			newResult.setStatus(Result.MEMBER_NOT_FOUND);
 		}
 		return newResult;
 	}
@@ -180,11 +188,13 @@ public class Store implements Serializable {
 									  request.getProductPrice(),
 									  request.getProductReOrderLevel());
 		if (catalog.addProduct(product)) {
-			newResult.setStatus(Result.OPERATION_SUCCESSFUL);
+			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
+			newResult.setStatus(Result.PRODUCT_ADDED);
 			newResult.setProduct(product);
 			// TODO : add code to order 2 x product.getProductReOrderLevel()
 		} else {
-			newResult.setStatus(Result.OPERATION_FAILURE);
+			newResult.setSuccess(Result.OPERATION_FAILURE);
+			newResult.setStatus(Result.PRODUCT_FOUND);
 		}
 		
 		return newResult;
@@ -201,21 +211,44 @@ public class Store implements Serializable {
 		Product product = catalog.searchID(request.getProductId());
 		if (product != null) {
 			product.setPrice(request.getNewProductPrice());
-			newResult.setStatus(Result.OPERATION_SUCCESSFUL);
+			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
+			newResult.setStatus(Result.PRODUCT_FOUND);
 			newResult.setProduct(product);
 		} else {
-			newResult.setStatus(Result.OPERATION_FAILURE);
+			newResult.setSuccess(Result.OPERATION_FAILURE);
+			newResult.setStatus(Result.PRODUCT_NOT_FOUND);
 		}
 		
 		return newResult;
 	}
 
-	public List<Result> getProductList() {
-		List<Result> resultList = new LinkedList<Result>();
+	public SafeProductIterator getProductList() {
+		SafeProductIterator resultIterator = new SafeProductIterator(catalog.iterator());
 		
+		return resultIterator;
 	}
 	
-    /**
+	public SafeMemberIterator getMemberList() {
+		SafeMemberIterator resultIterator = new SafeMemberIterator(memberList.iterator());
+		
+		return resultIterator;
+	}
+	
+	public Result getProduct(Request request) {
+		Result newResult = new Result();
+		Product product = catalog.searchID(request.getProductId());
+		if (product != null) {
+			newResult.setProduct(product);
+			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
+			newResult.setStatus(Result.PRODUCT_FOUND);
+		} else {
+			newResult.setSuccess(Result.OPERATION_FAILURE);
+			newResult.setStatus(Result.PRODUCT_NOT_FOUND);
+		}
+		return newResult;
+	}
+	
+	/**
      * Retrieves store data from disk
      * 
      * @return a Store object
