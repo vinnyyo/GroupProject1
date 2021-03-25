@@ -1,24 +1,20 @@
 package business.facade;
 
-import business.facade.Request;
-import business.facade.Result;
-import business.entities.Member;
-import business.entities.PendingOrders;
-import business.entities.OrderItem;
-import business.entities.Product;
-import business.entities.iterators.SafeIterator;
-import business.entities.iterators.SafeMemberIterator;
-import business.entities.iterators.SafeProductIterator;
-
-import java.util.List;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import business.entities.Member;
+import business.entities.Order;
+import business.entities.Product;
+import business.entities.iterators.SafeMemberIterator;
+import business.entities.iterators.SafeProductIterator;
 
 public class Store implements Serializable {
 
@@ -26,13 +22,14 @@ public class Store implements Serializable {
 	private static Store store;
 	private MemberList memberList = new MemberList();
 	private Catalog catalog = new Catalog();
-	
+	private PendingOrders orders = new PendingOrders();
+
 	/**
 	 * Collection class to hold products of the store
 	 *
 	 */
-	private class Catalog implements Serializable,Iterable<Product> {
-        private static final long serialVersionUID = 1L;
+	private class Catalog implements Serializable, Iterable<Product> {
+		private static final long serialVersionUID = 1L;
 		private List<Product> products = new LinkedList<Product>();
 
 		public boolean addProduct(Product product) {
@@ -52,7 +49,7 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-		
+
 		public Product searchID(String productId) {
 			Iterator<Product> productIterator = products.iterator();
 			while (productIterator.hasNext()) {
@@ -63,25 +60,25 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public Iterator<Product> iterator() {
 			return products.iterator();
 		}
 	}
-	
+
 	/**
 	 * Collection class to hold members of the store
 	 *
 	 */
-	private class MemberList implements Serializable,Iterable<Member> {
-        private static final long serialVersionUID = 1L;
+	private class MemberList implements Serializable, Iterable<Member> {
+		private static final long serialVersionUID = 1L;
 		private List<Member> members = new LinkedList<Member>();
 
 		public boolean addMember(Member member) {
 			return members.add(member);
 		}
-		
+
 		public boolean removeMember(int memberID) {
 			Member member = search(memberID);
 			if (member != null) {
@@ -101,13 +98,51 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public Iterator<Member> iterator() {
 			return members.iterator();
 		}
 	}
 
+	private class PendingOrders implements Serializable, Iterable<Order> {
+
+		private static final long serialVersionUID = 1L;
+		private List<Order> orderItems;
+
+		public void addOrderItem(Order order) {
+			orderItems.add(order);
+		}
+
+		public Order searchOrderId(int orderId) {
+			Iterator<Order> orderIterator = orderItems.iterator();
+			while (orderIterator.hasNext()) {
+				Order cursor = orderIterator.next();
+				if (cursor.matchesId(orderId)) {
+					return cursor;
+				}
+			}
+			return null;
+		}
+
+		public Order deleteOrderItem(int orderId) {
+			Order item = this.searchOrderId(orderId);
+			if (item == null) {
+				return null;
+			}
+			orderItems.remove(item);
+			return item;
+		}
+
+		@Override
+		public Iterator<Order> iterator() {
+			return orderItems.iterator();
+		}
+
+		public String toString() {
+			return orderItems.toString();
+		}
+	}
 
 	/**
 	 * Private constructor for singleton paradigm
@@ -117,6 +152,7 @@ public class Store implements Serializable {
 
 	/**
 	 * To get an instance of the singleton
+	 * 
 	 * @return singleton instance
 	 */
 	public static Store instance() {
@@ -126,21 +162,19 @@ public class Store implements Serializable {
 			return store;
 		}
 	}
-	
+
 	/**
 	 * Enrolls a new member to the store
+	 * 
 	 * @param request Member information
-	 * @return either a Result.OPERATION_SUCCESSFUL with member info or 
-	 * Result.OPERATION_FAILURE if there was an error
+	 * @return either a Result.OPERATION_SUCCESSFUL with member info or
+	 *         Result.OPERATION_FAILURE if there was an error
 	 */
 	public Result enrollMember(Request request) {
 		Result newResult = new Result();
-		Member newMember = new Member(request.getMemberName(), 
-									  request.getMemberAddress(),
-									  request.getMemberPhoneNumber(),
-									  request.getMemberJoinDate(),
-									  request.getMemberFees());
-		
+		Member newMember = new Member(request.getMemberName(), request.getMemberAddress(),
+				request.getMemberPhoneNumber(), request.getMemberJoinDate(), request.getMemberFees());
+
 		if (memberList.addMember(newMember)) {
 			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
 			newResult.setStatus(Result.MEMBER_ADDED);
@@ -154,9 +188,10 @@ public class Store implements Serializable {
 
 	/**
 	 * Removes a member for the MemberList
+	 * 
 	 * @param request Member information
-	 * @return either a Result.OPERATION_SUCCESSFUL with member info or 
-	 * Result.OPERATION_FAILURE if there was an error
+	 * @return either a Result.OPERATION_SUCCESSFUL with member info or
+	 *         Result.OPERATION_FAILURE if there was an error
 	 */
 	public Result removeMember(Request request) {
 		Result newResult = new Result();
@@ -172,21 +207,19 @@ public class Store implements Serializable {
 		}
 		return newResult;
 	}
-	
+
 	/**
 	 * Adds a product to the catalog and orders 2x restock level
+	 * 
 	 * @param request
-	 * @return either a Result.OPERATION_SUCCESSFUL with product info or 
-	 * Result.OPERATION_FAILURE if there was an error
+	 * @return either a Result.OPERATION_SUCCESSFUL with product info or
+	 *         Result.OPERATION_FAILURE if there was an error
 	 */
 	public Result addProduct(Request request) {
 		Result newResult = new Result();
-		//String name, String id, int stock, double price, int reOrderLevel
-		Product product = new Product(request.getProductName(),
-									  request.getProductId(),
-									  request.getProductStock(),
-									  request.getProductPrice(),
-									  request.getProductReOrderLevel());
+		// String name, String id, int stock, double price, int reOrderLevel
+		Product product = new Product(request.getProductName(), request.getProductId(), request.getProductStock(),
+				request.getProductPrice(), request.getProductReOrderLevel());
 		if (catalog.addProduct(product)) {
 			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
 			newResult.setStatus(Result.PRODUCT_ADDED);
@@ -196,15 +229,16 @@ public class Store implements Serializable {
 			newResult.setSuccess(Result.OPERATION_FAILURE);
 			newResult.setStatus(Result.PRODUCT_FOUND);
 		}
-		
+
 		return newResult;
 	}
-	
+
 	/**
 	 * Changes the price of a product identified by id
+	 * 
 	 * @param request
-	 * @return either a Result.OPERATION_SUCCESSFUL with product info or 
-	 * Result.OPERATION_FAILURE if there was an error
+	 * @return either a Result.OPERATION_SUCCESSFUL with product info or
+	 *         Result.OPERATION_FAILURE if there was an error
 	 */
 	public Result changeProductPrice(Request request) {
 		Result newResult = new Result();
@@ -218,22 +252,22 @@ public class Store implements Serializable {
 			newResult.setSuccess(Result.OPERATION_FAILURE);
 			newResult.setStatus(Result.PRODUCT_NOT_FOUND);
 		}
-		
+
 		return newResult;
 	}
 
 	public SafeProductIterator getProductList() {
 		SafeProductIterator resultIterator = new SafeProductIterator(catalog.iterator());
-		
+
 		return resultIterator;
 	}
-	
+
 	public SafeMemberIterator getMemberList() {
 		SafeMemberIterator resultIterator = new SafeMemberIterator(memberList.iterator());
-		
+
 		return resultIterator;
 	}
-	
+
 	public Result getProduct(Request request) {
 		Result newResult = new Result();
 		Product product = catalog.searchID(request.getProductId());
@@ -247,44 +281,44 @@ public class Store implements Serializable {
 		}
 		return newResult;
 	}
-	
-	/**
-     * Retrieves store data from disk
-     * 
-     * @return a Store object
-     */
-    public static Store retrieve() {
-        try {
-            FileInputStream file = new FileInputStream("StoreData");
-            ObjectInputStream input = new ObjectInputStream(file);
-            store = (Store) input.readObject();
-            Member.retrieve(input);
-            return store;
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            return null;
-        } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
-            return null;
-        }
-    }
 
-    /**
-     * Saves the Store object
-     * 
-     * @return true iff the data could be saved
-     */
-    public static boolean save() {
-        try {
-            FileOutputStream file = new FileOutputStream("StoreData");
-            ObjectOutputStream output = new ObjectOutputStream(file);
-            output.writeObject(store);
-            Member.save(output);
-            file.close();
-            return true;
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            return false;
-        }
-    }
+	/**
+	 * Retrieves store data from disk
+	 * 
+	 * @return a Store object
+	 */
+	public static Store retrieve() {
+		try {
+			FileInputStream file = new FileInputStream("StoreData");
+			ObjectInputStream input = new ObjectInputStream(file);
+			store = (Store) input.readObject();
+			Member.retrieve(input);
+			return store;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return null;
+		} catch (ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Saves the Store object
+	 * 
+	 * @return true iff the data could be saved
+	 */
+	public static boolean save() {
+		try {
+			FileOutputStream file = new FileOutputStream("StoreData");
+			ObjectOutputStream output = new ObjectOutputStream(file);
+			output.writeObject(store);
+			Member.save(output);
+			file.close();
+			return true;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return false;
+		}
+	}
 }
