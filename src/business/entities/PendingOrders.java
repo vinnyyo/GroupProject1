@@ -4,19 +4,19 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-public class PendingOrders implements Serializable, Iterable<OrderItem> {
+public class PendingOrders implements Serializable, Iterable<Order> {
 
 	private static final long serialVersionUID = 1L;
-	private List<OrderItem> orderItems;
+	private List<Order> orderItems;
 
-	public void addOrderItem(OrderItem order) {
+	public void addOrderItem(Order order) {
 		orderItems.add(order);
 	}
 
-	public OrderItem searchOrderId(int orderId) {
-		Iterator<OrderItem> orderIterator = orderItems.iterator();
+	public Order searchOrderId(int orderId) {
+		Iterator<Order> orderIterator = orderItems.iterator();
 		while (orderIterator.hasNext()) {
-			OrderItem cursor = orderIterator.next();
+			Order cursor = orderIterator.next();
 			if (cursor.matchesId(orderId)) {
 				return cursor;
 			}
@@ -24,8 +24,8 @@ public class PendingOrders implements Serializable, Iterable<OrderItem> {
 		return null;
 	}
 
-	public OrderItem deleteOrderItem(int orderId) {
-		OrderItem item = this.searchOrderId(orderId);
+	public Order deleteOrderItem(int orderId) {
+		Order item = this.searchOrderId(orderId);
 		if (item == null) {
 			return null;
 		}
@@ -34,11 +34,11 @@ public class PendingOrders implements Serializable, Iterable<OrderItem> {
 	}
 
 	@Override
-	public Iterator<OrderItem> iterator() {
+	public Iterator<Order> iterator() {
 		return orderItems.iterator();
 	}
 
-	public toString() {
-		
+	public String toString() {
+		return orderItems.toString();
 	}
 }
