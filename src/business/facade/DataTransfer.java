@@ -8,12 +8,13 @@ import business.entities.Product;
 public abstract class DataTransfer {
 	private int memberId;
 	private String memberName;
+	private String memberAddress;
 	private String memberPhoneNumber;
 	private Date memberJoinDate;
-	private long memberFees;
+	private double memberFees;
 	private Integer orderId;
 	private Date orderCreatedDate;
-	private Double orderTotalPrice;
+	private double orderTotalPrice;
 	private String productName;
 	private String productId;
 	private int productStock;
@@ -68,6 +69,14 @@ public abstract class DataTransfer {
 		this.memberName = memberName;
 	}
 	
+	public void setMemberAddress(String address) {
+		this.memberAddress = address;
+	}
+	
+	public String getMemberAddress() {
+		return this.memberAddress;
+	}
+	
 	public String getMemberPhoneNumber() {
 		return memberPhoneNumber;
 	}
@@ -84,11 +93,11 @@ public abstract class DataTransfer {
 		this.memberJoinDate = memberJoinDate;
 	}
 	
-	public long getMemberFees() {
+	public double getMemberFees() {
 		return memberFees;
 	}
 	
-	public void setMemberFees(long memberFees) {
+	public void setMemberFees(double memberFees) {
 		this.memberFees = memberFees;
 	}
 	
@@ -108,11 +117,11 @@ public abstract class DataTransfer {
 		this.orderCreatedDate = orderCreatedDate;
 	}
 	
-	public Double getOrderTotalPrice() {
+	public double getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
 	
-	public void setOrderTotalPrice(Double orderTotalPrice) {
+	public void setOrderTotalPrice(double orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 	

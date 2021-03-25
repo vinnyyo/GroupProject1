@@ -38,7 +38,8 @@ public class PendingOrders implements Serializable, Iterable<OrderItem> {
 		return orderItems.iterator();
 	}
 
-	public toString() {
-		
+	@Override
+	public String toString() {
+		return "Create a string here";
 	}
 }
