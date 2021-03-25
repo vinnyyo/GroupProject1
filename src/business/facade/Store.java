@@ -32,6 +32,11 @@ public class Store implements Serializable {
 		private static final long serialVersionUID = 1L;
 		private List<Product> products = new LinkedList<Product>();
 
+		/**
+		 * Adds product to the collection class Catalog
+		 * @param product product to add
+		 * @return success of operation
+		 */
 		public boolean addProduct(Product product) {
 			if (searchName(product.getName()) != null) {
 				return products.add(product);
@@ -39,6 +44,11 @@ public class Store implements Serializable {
 			return false;
 		}
 
+		/**
+		 * Searches for a product by name
+		 * @param productName name of product to search for
+		 * @return product if found, null if not
+		 */
 		public Product searchName(String productName) {
 			Iterator<Product> productIterator = products.iterator();
 			while (productIterator.hasNext()) {
@@ -49,7 +59,12 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-
+		
+		/**
+		 * Searches for product by id
+		 * @param productId id to search for
+		 * @return product if found, null if not
+		 */
 		public Product searchID(String productId) {
 			Iterator<Product> productIterator = products.iterator();
 			while (productIterator.hasNext()) {
@@ -60,7 +75,10 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-
+		
+		/**
+		 * iterator to iterate through the Catalog
+		 */
 		@Override
 		public Iterator<Product> iterator() {
 			return products.iterator();
@@ -75,10 +93,20 @@ public class Store implements Serializable {
 		private static final long serialVersionUID = 1L;
 		private List<Member> members = new LinkedList<Member>();
 
+		/**
+		 * adds a member to the collection
+		 * @param member member to add
+		 * @return success of the operation
+		 */
 		public boolean addMember(Member member) {
 			return members.add(member);
 		}
-
+		
+		/**
+		 * removes a member from the collection
+		 * @param memberID id of member to remove
+		 * @return operation success
+		 */
 		public boolean removeMember(int memberID) {
 			Member member = search(memberID);
 			if (member != null) {
@@ -88,6 +116,11 @@ public class Store implements Serializable {
 			return false;
 		}
 
+		/**
+		 * searches for a member by id
+		 * @param memberID id of member to search for
+		 * @return member if successful, null if not
+		 */
 		public Member search(int memberID) {
 			Iterator<Member> memberIterator = members.iterator();
 			while (memberIterator.hasNext()) {
@@ -98,7 +131,10 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-
+		
+		/**
+		 * iterator for the MemberList
+		 */
 		@Override
 		public Iterator<Member> iterator() {
 			return members.iterator();
@@ -256,18 +292,31 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
+	/**
+	 * gets a safe iterator for the products in the catalog
+	 * @return safe iterator for product
+	 */
 	public SafeProductIterator getProductList() {
 		SafeProductIterator resultIterator = new SafeProductIterator(catalog.iterator());
 
 		return resultIterator;
 	}
-
+	
+	/**
+	 * gets a safe iterator for the members in MemberList
+	 * @return safe iterator for members
+	 */
 	public SafeMemberIterator getMemberList() {
 		SafeMemberIterator resultIterator = new SafeMemberIterator(memberList.iterator());
 
 		return resultIterator;
 	}
-
+	
+	/**
+	 * gets information about a product by id from the catalog
+	 * @param request request from UI
+	 * @return result of the request
+	 */
 	public Result getProduct(Request request) {
 		Result newResult = new Result();
 		Product product = catalog.searchID(request.getProductId());
