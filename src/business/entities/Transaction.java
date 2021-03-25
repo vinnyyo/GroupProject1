@@ -1,8 +1,11 @@
 package business.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Transaction {
+public class Transaction implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	public Product item;
 	public int amountPurchased;
 	public Date timePurchased;

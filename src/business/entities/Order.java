@@ -12,12 +12,15 @@ public class Order implements Serializable {
 	private int orderId;
 	private Date createdDate;
 
-	public Order(Product orderItem, int quantity, int orderId) {
+	private static int idCounter = 1;
+
+	public Order(Product orderItem, int quantity) {
 		Date date = new Date(System.currentTimeMillis());
 		this.orderItem = orderItem;
 		this.quantity = quantity;
-		this.orderId = orderId;
+		this.orderId = idCounter;
 		this.createdDate = date;
+		idCounter++;
 	}
 
 	/**

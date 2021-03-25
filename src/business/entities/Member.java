@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedList;
 
 public class Member implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -17,6 +18,7 @@ public class Member implements Serializable {
 	private String address;
 	private Date joinDate;
 	private double fees;
+	private LinkedList<Transaction> transactions;
 
 	/**
 	 * A static field (say, idCounter) to generate the value to be stored in id.
@@ -26,8 +28,7 @@ public class Member implements Serializable {
 	 */
 	private static int idCounter = 1;
 
-	public Member(String name, String address, String phoneNumber, Date joinDate,
-			double fees) {
+	public Member(String name, String address, String phoneNumber, Date joinDate, double fees) {
 		super();
 		this.name = name;
 		this.address = address;
@@ -36,6 +37,7 @@ public class Member implements Serializable {
 		this.fees = fees;
 		this.id = idCounter;
 		idCounter++;
+		transactions = new LinkedList<Transaction>();
 	}
 
 	/**
@@ -73,27 +75,35 @@ public class Member implements Serializable {
 	public String getAddress() {
 		return address;
 	}
-	
+
 	/**
 	 * @return the fees
 	 */
 	public double getFees() {
 		return fees;
 	}
-	
+
 	public int getIdCounter() {
 		return idCounter;
 	}
-	
-    public static void save(ObjectOutputStream output) throws IOException {
-        output.writeObject(idCounter);
-    }
 
-    public static void retrieve(ObjectInputStream input) throws IOException, ClassNotFoundException {
-        idCounter = (int) input.readObject();
-    }
-	
+	public static void save(ObjectOutputStream output) throws IOException {
+		output.writeObject(idCounter);
+	}
+
+	public static void retrieve(ObjectInputStream input) throws IOException, ClassNotFoundException {
+		idCounter = (int) input.readObject();
+	}
+
 	public boolean matchesID(int id) {
 		return (id == this.id);
+	}
+
+	public boolean addTransaction(Product item, int amount) {
+		return transactions.add(new Transaction(item, amount));
+	}
+
+	public LinkedList<Transaction> getTransactions() {
+		return transactions;
 	}
 }
