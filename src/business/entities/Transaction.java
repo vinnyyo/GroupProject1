@@ -70,4 +70,8 @@ public class Transaction implements Serializable {
 		return item.getName() + "\t" + amountPurchased + "\t" + item.getPrice() + "\t" + getTotalPrice();
 	}
 
+	public int compareTo(Date date) {
+		return timePurchased.compareTo(date);
+	}
+
 }
