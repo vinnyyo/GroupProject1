@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class OrderItem implements Serializable {
+public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Product orderItem;
@@ -12,7 +12,7 @@ public class OrderItem implements Serializable {
 	private int orderId;
 	private Date createdDate;
 
-	public OrderItem(Product orderItem, int quantity, int orderId) {
+	public Order(Product orderItem, int quantity, int orderId) {
 		Date date = new Date(System.currentTimeMillis());
 		this.orderItem = orderItem;
 		this.quantity = quantity;
