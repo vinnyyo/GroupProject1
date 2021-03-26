@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 import business.entities.iterators.SafeMemberIterator;
@@ -326,6 +328,9 @@ public class UserInterface {
 	private boolean printTransations() {
 		System.out.println("Print transactions.");
 		Request request = new Request();
+		System.out.println("Please enter a member ID and the dates to look between.");
+		int memberId = inputInteger("Enter the member ID:");
+		request.setMemberId(memberId);
 		try {
 			String dateString1 = inputString("Enter the start date in format mm/dd/yyyy");
 			Date date1 = new SimpleDateFormat("MM/dd/yyyy").parse(dateString1);
@@ -335,13 +340,28 @@ public class UserInterface {
 				System.out.println("Invalid dates entered.");
 				return false;
 			}
+			request.setStartDate(date1);
+			request.setEndDate(date2);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Please enter valid dates.");
+			return false;
 		}
-		System.out.println("Enter the dates for w.");
-		// TODO : implement this
-		System.out.println("Not implemented");
+		LinkedList<String> read = store.printTransactions(request);
+		Iterator<String> list = read.iterator();
+		String firstString = list.next();
+		if (firstString.equals("Error invalid member ID!")) {
+			System.out.println(firstString);
+			return false;
+		}
+		if (firstString == null) {
+			System.out.println("There are no transactions.");
+			return true;
+		}
+		System.out.println("Product\tQty\tPrice\tTotal");
+		System.out.println(firstString);
+		while (list.hasNext()) {
+			System.out.println(list.next());
+		}
 		return true;
 	}
 

@@ -13,6 +13,7 @@ import java.util.List;
 import business.entities.Member;
 import business.entities.Order;
 import business.entities.Product;
+import business.entities.Transaction;
 import business.entities.iterators.SafeMemberIterator;
 import business.entities.iterators.SafeProductIterator;
 
@@ -34,11 +35,12 @@ public class Store implements Serializable {
 
 		/**
 		 * Adds product to the collection class Catalog
+		 * 
 		 * @param product product to add
 		 * @return success of operation
 		 */
 		public boolean addProduct(Product product) {
-			if (searchName(product.getName()) != null) {
+			if (searchName(product.getName()) == null) {
 				return products.add(product);
 			}
 			return false;
@@ -46,6 +48,7 @@ public class Store implements Serializable {
 
 		/**
 		 * Searches for a product by name
+		 * 
 		 * @param productName name of product to search for
 		 * @return product if found, null if not
 		 */
@@ -59,9 +62,10 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-		
+
 		/**
 		 * Searches for product by id
+		 * 
 		 * @param productId id to search for
 		 * @return product if found, null if not
 		 */
@@ -75,7 +79,7 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-		
+
 		/**
 		 * iterator to iterate through the Catalog
 		 */
@@ -95,15 +99,17 @@ public class Store implements Serializable {
 
 		/**
 		 * adds a member to the collection
+		 * 
 		 * @param member member to add
 		 * @return success of the operation
 		 */
 		public boolean addMember(Member member) {
 			return members.add(member);
 		}
-		
+
 		/**
 		 * removes a member from the collection
+		 * 
 		 * @param memberID id of member to remove
 		 * @return operation success
 		 */
@@ -118,6 +124,7 @@ public class Store implements Serializable {
 
 		/**
 		 * searches for a member by id
+		 * 
 		 * @param memberID id of member to search for
 		 * @return member if successful, null if not
 		 */
@@ -131,7 +138,7 @@ public class Store implements Serializable {
 			}
 			return null;
 		}
-		
+
 		/**
 		 * iterator for the MemberList
 		 */
@@ -294,6 +301,7 @@ public class Store implements Serializable {
 
 	/**
 	 * gets a safe iterator for the products in the catalog
+	 * 
 	 * @return safe iterator for product
 	 */
 	public SafeProductIterator getProductList() {
@@ -301,9 +309,10 @@ public class Store implements Serializable {
 
 		return resultIterator;
 	}
-	
+
 	/**
 	 * gets a safe iterator for the members in MemberList
+	 * 
 	 * @return safe iterator for members
 	 */
 	public SafeMemberIterator getMemberList() {
@@ -311,9 +320,10 @@ public class Store implements Serializable {
 
 		return resultIterator;
 	}
-	
+
 	/**
 	 * gets information about a product by id from the catalog
+	 * 
 	 * @param request request from UI
 	 * @return result of the request
 	 */
@@ -329,6 +339,25 @@ public class Store implements Serializable {
 			newResult.setStatus(Result.PRODUCT_NOT_FOUND);
 		}
 		return newResult;
+	}
+
+	public LinkedList<String> printTransactions(Request request) {
+		LinkedList<String> output = new LinkedList<String>();
+		Member customer = memberList.search(request.getMemberId());
+		if (customer == null) {
+			output.add("Error invalid member ID!");
+			return output;
+		}
+		LinkedList<Transaction> transactions = customer.getTransactions();
+		Iterator<Transaction> list = transactions.iterator();
+		while (list.hasNext()) {
+			Transaction purchase = list.next();
+			if (purchase.compareTo(request.getStartDate()) >= 0 && purchase.compareTo(request.getEndDate()) <= 0) {
+				output.add(purchase.toString());
+			}
+		}
+		return output;
+
 	}
 
 	/**

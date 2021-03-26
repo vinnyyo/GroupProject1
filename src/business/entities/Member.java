@@ -106,4 +106,5 @@ public class Member implements Serializable {
 	public LinkedList<Transaction> getTransactions() {
 		return transactions;
 	}
+
 }

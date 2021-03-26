@@ -1,6 +1,7 @@
 package business.entities;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class Transaction implements Serializable {
@@ -67,7 +68,12 @@ public class Transaction implements Serializable {
 	}
 
 	public String toString() {
-		return item.getName() + "\t" + amountPurchased + "\t" + item.getPrice() + "\t" + getTotalPrice();
+		DecimalFormat df = new DecimalFormat("###,##0.00");
+		String output = item.getName() + "\t";
+		if (item.getName().length() < 8) {
+			output += "\t";
+		}
+		return output + amountPurchased + "\t$" + df.format(item.getPrice()) + "\t$" + df.format(getTotalPrice());
 	}
 
 	public int compareTo(Date date) {
