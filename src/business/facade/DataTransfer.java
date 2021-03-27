@@ -13,7 +13,7 @@ public abstract class DataTransfer {
 	private String memberPhoneNumber;
 	private Date memberJoinDate;
 	private double memberFees;
-	private Integer orderId;
+	private int orderId;
 	private Date orderCreatedDate;
 	private int orderQuantity;
 	private double orderTotalPrice;

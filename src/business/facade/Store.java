@@ -287,20 +287,26 @@ public class Store implements Serializable {
 		return purchase.toString();
 	}
 
-	public LinkedList<String> checkForOrder() {
-		LinkedList<String> output = new LinkedList<String>();
-		Iterator<Product> products = catalog.iterator();
-		while (products.hasNext()) {
-			Product item = products.next();
-			if (item.getStock() <= item.getReOrderLevel()) {
-				String message = "";
-				Order order = new Order(item, item.getReOrderLevel() * 2);
-				orders.addOrderItem(order);
-				message += item.getName() + " has been ordered.\n";
-				message += order.toString();
-				output.add(message);
-			}
+	public Result checkForOrder(Request request) {
+		Result output = new Result();
+		Product item = catalog.searchID(request.getProductId());
+		if (item.getStock() <= item.getReOrderLevel()) {
+			String message = "";
+			Order order = new Order(item, item.getReOrderLevel() * 2);
+			orders.addOrderItem(order);
+			message += item.getName() + " has been ordered.\n";
+			message += order.toString();
+			output.setMessage(message);
 		}
+		return output;
+	}
+
+	public Result processShipment(Request request) {
+		Result output = new Result();
+		Order order = orders.deleteOrderItem(request.getOrderId());
+		order.getOrderItem().setStock(order.getOrderItem().getStock() + order.getQuantity());
+		output.setProduct(order.getOrderItem());
+		output.setSuccess(true);
 		return output;
 	}
 
@@ -385,6 +391,20 @@ public class Store implements Serializable {
 		Member member = memberList.search(request.getMemberId());
 		if (member != null) {
 			newResult.setMember(member);
+			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
+			newResult.setStatus(Result.PRODUCT_FOUND);
+		} else {
+			newResult.setSuccess(Result.OPERATION_FAILURE);
+			newResult.setStatus(Result.PRODUCT_NOT_FOUND);
+		}
+		return newResult;
+	}
+
+	public Result getOrder(Request request) {
+		Result newResult = new Result();
+		Order order = orders.searchOrderId(request.getOrderId());
+		if (order != null) {
+			newResult.setOrder(order);
 			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
 			newResult.setStatus(Result.PRODUCT_FOUND);
 		} else {

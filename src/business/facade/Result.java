@@ -13,25 +13,34 @@ public class Result extends DataTransfer {
 	public static final int MEMBER_ADDED = 8;
 	private boolean success;
 	private int status = 0;
-	
+	private String message;
+
 	public Result() {
 		super();
 	}
-	
+
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+
 	public int getStatus() {
 		return status;
 	}
-	
+
 	public boolean getSuccess() {
 		return success;
 	}
-	
+
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
-	
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 }

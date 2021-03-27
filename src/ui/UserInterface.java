@@ -236,6 +236,7 @@ public class UserInterface {
 	private void checkoutMember() {
 		// TODO : implement this
 		LinkedList<String> display = new LinkedList<String>();
+		LinkedList<Request> products = new LinkedList<Request>();
 		Request request = new Request();
 		System.out.println("Partially implemented.");
 		boolean done = false;
@@ -251,6 +252,7 @@ public class UserInterface {
 					request.setProductId(idInput);
 					result = store.getProduct(request);
 					if (result.getSuccess()) {
+						products.add(request);
 						count = inputInteger("Enter amount : ");
 						if ((count > 0) && (count < result.getProductStock())) {
 							// Add the product, and count to a transaction list.
@@ -274,10 +276,10 @@ public class UserInterface {
 				System.out.println(list.next());
 			}
 		}
-		LinkedList<String> orders = store.checkForOrder();
-		Iterator<String> list = orders.iterator();
-		while (list.hasNext()) {
-			System.out.println(list.next());
+		Iterator<Request> items = products.iterator();
+		while (items.hasNext()) {
+			Result status = store.checkForOrder(items.next());
+			System.out.println(status.getMessage());
 		}
 	}
 
@@ -286,7 +288,28 @@ public class UserInterface {
 	 */
 	private void processShipment() {
 		// TODO : implement this
-		System.out.println("Not implemented.");
+		System.out.println("Process Shipment.");
+		Request request = new Request();
+		Result result = new Result();
+		boolean done = false;
+		do {
+			int count = 0;
+			int idInput = inputInteger("Enter Order ID (0 to finish):");
+			if (idInput != 0) {
+				request.setOrderId(idInput);
+				result = store.getOrder(request);
+				if (result.getSuccess()) {
+					result = store.processShipment(request);
+					System.out.println("Order Processed.");
+					System.out.println(
+							result.getProductId() + " " + result.getProductName() + " " + result.getProductStock());
+				} else {
+					System.out.println("Order not found.");
+				}
+			} else {
+				done = true;
+			}
+		} while (!done);
 	}
 
 	/**
