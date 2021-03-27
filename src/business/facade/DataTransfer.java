@@ -45,6 +45,7 @@ public abstract class DataTransfer {
 		this.memberJoinDate = member.getJoinDate();
 		this.memberName = member.getName();
 		this.memberPhoneNumber = member.getPhoneNumber();
+		this.memberAddress = member.getAddress();
 	}
 
 	public void setProduct(Product product) {

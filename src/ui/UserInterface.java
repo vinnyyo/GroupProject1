@@ -3,6 +3,7 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -153,6 +154,28 @@ public class UserInterface {
 			}
 		} while (!isDouble);
 		return output;
+	}
+
+	/**
+	 * Converts a double into formatted price string
+	 * 
+	 * @param price the desired double to format
+	 * @return String that is the formatted double
+	 */
+	private String formatPrice(Double price) {
+		DecimalFormat df = new DecimalFormat("###,##0.00");
+		return "$" + df.format(price);
+	}
+
+	/**
+	 * Converts a Date into formatted date string
+	 * 
+	 * @param date the desired date to format
+	 * @return String that is the formatted date
+	 */
+	private String formatDate(Date date) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		return formatter.format(date);
 	}
 
 	/**
@@ -318,8 +341,10 @@ public class UserInterface {
 	private void changeProductPrice() {
 		Request request = new Request();
 		System.out.println("Change product price.");
-		String prodID = inputString("Enter product id : ");
-		request.setProductId(prodID);
+		String productID = inputString("Enter product id : ");
+		double productPrice = inputDouble("Enter product price : ");
+		request.setProductId(productID);
+		request.setNewProductPrice(productPrice);
 		Result result = store.changeProductPrice(request);
 		if (result.getSuccess()) {
 			System.out.println(result.getProductName() + " " + result.getProductPrice());
@@ -339,9 +364,9 @@ public class UserInterface {
 		while (iterator.hasNext()) {
 			Result curResult = iterator.next();
 			if (curResult.getProductName().contains(searchString)) {
-				System.out.println(
-						curResult.getProductName() + " " + curResult.getProductId() + " " + curResult.getProductPrice()
-								+ " " + curResult.getProductStock() + " " + curResult.getProductReOrderLevel());
+				System.out.println(curResult.getProductName() + " " + curResult.getProductId() + " "
+						+ formatPrice(curResult.getProductPrice()) + " " + curResult.getProductStock() + " "
+						+ curResult.getProductReOrderLevel());
 			}
 		}
 	}
@@ -389,16 +414,19 @@ public class UserInterface {
 		}
 		LinkedList<String> read = store.printTransactions(request);
 		Iterator<String> list = read.iterator();
-		String firstString = list.next();
-		if (firstString.equals("Error invalid member ID!")) {
-			System.out.println(firstString);
-			return false;
+		String firstString = null;
+		if (list.hasNext()) {
+			firstString = list.next();
+			if (firstString.equals("Error invalid member ID!")) {
+				System.out.println(firstString);
+				return false;
+			}
 		}
 		if (firstString == null) {
 			System.out.println("There are no transactions.");
 			return true;
 		}
-		System.out.println("Product\tQty\tPrice\tTotal");
+		System.out.println("Product\t\tQty\tPrice\tTotal");
 		System.out.println(firstString);
 		while (list.hasNext()) {
 			System.out.println(list.next());
@@ -443,7 +471,8 @@ public class UserInterface {
 		while (iterator.hasNext()) {
 			Result curResult = iterator.next();
 			System.out.println(curResult.getProductName() + " " + curResult.getProductId() + " "
-					+ curResult.getProductStock() + " " + curResult.getProductReOrderLevel());
+					+ curResult.getProductStock() + " " + formatPrice(curResult.getProductPrice()) + " "
+					+ curResult.getProductReOrderLevel());
 		}
 	}
 
