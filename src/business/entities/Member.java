@@ -103,6 +103,10 @@ public class Member implements Serializable {
 		return transactions.add(new Transaction(item, amount));
 	}
 
+	public boolean addTransaction(Transaction transaction) {
+		return transactions.add(transaction);
+	}
+
 	public LinkedList<Transaction> getTransactions() {
 		return transactions;
 	}

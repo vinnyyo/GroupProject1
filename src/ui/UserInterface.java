@@ -234,33 +234,51 @@ public class UserInterface {
 	 */
 	private void checkoutMember() {
 		// TODO : implement this
+		LinkedList<String> display = new LinkedList<String>();
+		Request request = new Request();
 		System.out.println("Partially implemented.");
 		boolean done = false;
 		System.out.println("Member Checkout:");
-		do {
-			int count = 0;
-			Request request = new Request();
-			String idInput = inputString("Enter Product ID (0 to finish):");
-			if (idInput.charAt(0) != '0') {
-				request.setProductId(idInput);
-				Result result = store.getProduct(request);
-				if (result.getSuccess()) {
-					count = inputInteger("Enter amount : ");
-					if ((count > 0) && (count < result.getProductStock())) {
-						// Add the product, and count to a transaction list.
-					}
-					if (count <= 0) {
-						System.out.println("Must order more than 0.");
+		int memberId = inputInteger("Enter Member ID:");
+		request.setMemberId(memberId);
+		Result result = store.getMember(request);
+		if (result.getSuccess()) {
+			do {
+				int count = 0;
+				String idInput = inputString("Enter Product ID (0 to finish):");
+				if (idInput.charAt(0) != '0') {
+					request.setProductId(idInput);
+					result = store.getProduct(request);
+					if (result.getSuccess()) {
+						count = inputInteger("Enter amount : ");
+						if ((count > 0) && (count < result.getProductStock())) {
+							// Add the product, and count to a transaction list.
+							request.setQuantity(count);
+							display.add(store.checkoutMember(request));
+						}
+						if (count <= 0) {
+							System.out.println("Must order more than 0.");
+						} else {
+							System.out.println("Order exceeds stock.");
+						}
 					} else {
-						System.out.println("Order exceeds stock.");
+						System.out.println("Item not found.");
 					}
 				} else {
-					System.out.println("Item not found.");
+					done = true;
 				}
-			} else {
-				done = true;
+			} while (!done);
+			Iterator<String> list = display.iterator();
+			System.out.println("Product\tQty\tPrice\tTotal");
+			while (list.hasNext()) {
+				System.out.println(list.next());
 			}
-		} while (!done);
+		}
+		LinkedList<String> orders = store.checkForOrder();
+		Iterator<String> list = orders.iterator();
+		while (list.hasNext()) {
+			System.out.println(list.next());
+		}
 	}
 
 	/**

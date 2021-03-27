@@ -151,7 +151,7 @@ public class Store implements Serializable {
 	private class PendingOrders implements Serializable, Iterable<Order> {
 
 		private static final long serialVersionUID = 1L;
-		private List<Order> orderItems;
+		private List<Order> orderItems = new LinkedList<Order>();
 
 		public void addOrderItem(Order order) {
 			orderItems.add(order);
@@ -268,12 +268,39 @@ public class Store implements Serializable {
 			newResult.setStatus(Result.PRODUCT_ADDED);
 			newResult.setProduct(product);
 			// TODO : add code to order 2 x product.getProductReOrderLevel()
+			orders.addOrderItem(new Order(product, product.getReOrderLevel() * 2));
 		} else {
 			newResult.setSuccess(Result.OPERATION_FAILURE);
 			newResult.setStatus(Result.PRODUCT_FOUND);
 		}
 
 		return newResult;
+	}
+
+	public String checkoutMember(Request request) {
+		Product item = catalog.searchID(request.getProductId());
+		Transaction purchase = new Transaction(item, request.getQuantity());
+		Member customer = memberList.search(request.getMemberId());
+		customer.addTransaction(purchase);
+		item.setStock(item.getStock() - request.getQuantity());
+		return purchase.toString();
+	}
+
+	public LinkedList<String> checkForOrder() {
+		LinkedList<String> output = new LinkedList<String>();
+		Iterator<Product> products = catalog.iterator();
+		while (products.hasNext()) {
+			Product item = products.next();
+			if (item.getStock() <= item.getReOrderLevel()) {
+				String message = "";
+				Order order = new Order(item, item.getReOrderLevel() * 2);
+				orders.addOrderItem(order);
+				message += item.getName() + " has been ordered.\n";
+				message += order.toString();
+				output.add(message);
+			}
+		}
+		return output;
 	}
 
 	/**
@@ -332,6 +359,20 @@ public class Store implements Serializable {
 		Product product = catalog.searchID(request.getProductId());
 		if (product != null) {
 			newResult.setProduct(product);
+			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
+			newResult.setStatus(Result.PRODUCT_FOUND);
+		} else {
+			newResult.setSuccess(Result.OPERATION_FAILURE);
+			newResult.setStatus(Result.PRODUCT_NOT_FOUND);
+		}
+		return newResult;
+	}
+
+	public Result getMember(Request request) {
+		Result newResult = new Result();
+		Member member = memberList.search(request.getMemberId());
+		if (member != null) {
+			newResult.setMember(member);
 			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
 			newResult.setStatus(Result.PRODUCT_FOUND);
 		} else {
