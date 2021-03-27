@@ -15,6 +15,7 @@ import business.entities.Order;
 import business.entities.Product;
 import business.entities.Transaction;
 import business.entities.iterators.SafeMemberIterator;
+import business.entities.iterators.SafeOrderIterator;
 import business.entities.iterators.SafeProductIterator;
 
 public class Store implements Serializable {
@@ -344,6 +345,17 @@ public class Store implements Serializable {
 	 */
 	public SafeMemberIterator getMemberList() {
 		SafeMemberIterator resultIterator = new SafeMemberIterator(memberList.iterator());
+
+		return resultIterator;
+	}
+
+	/**
+	 * gets a safe iterator for the orderss in PendingOrders
+	 * 
+	 * @return safe iterator for orders
+	 */
+	public SafeOrderIterator getOrderList() {
+		SafeOrderIterator resultIterator = new SafeOrderIterator(orders.iterator());
 
 		return resultIterator;
 	}

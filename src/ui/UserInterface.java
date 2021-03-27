@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 import business.entities.iterators.SafeMemberIterator;
+import business.entities.iterators.SafeOrderIterator;
 import business.entities.iterators.SafeProductIterator;
 import business.facade.Request;
 import business.facade.Result;
@@ -387,8 +388,15 @@ public class UserInterface {
 	 * lists all orders the store has not received yet.
 	 */
 	private void listOutstandingOrders() {
-		// TODO : implement this
+		SafeOrderIterator iterator = store.getOrderList();
+		System.out.println("Order List:");
+		while (iterator.hasNext()) {
+			Result currentResult = iterator.next();
+			System.out.println(currentResult.getOrderId() + " " + currentResult.getProductName() + " "
+					+ currentResult.getOrderCreatedDate() + " " + currentResult.getOrderQuantity());
+		}
 		System.out.println("Not implemented");
+
 	}
 
 	/**
