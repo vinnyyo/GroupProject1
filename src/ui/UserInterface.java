@@ -256,8 +256,7 @@ public class UserInterface {
 							// Add the product, and count to a transaction list.
 							request.setQuantity(count);
 							display.add(store.checkoutMember(request));
-						}
-						if (count <= 0) {
+						} else if (count <= 0) {
 							System.out.println("Must order more than 0.");
 						} else {
 							System.out.println("Order exceeds stock.");
