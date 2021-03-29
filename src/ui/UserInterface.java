@@ -258,7 +258,7 @@ public class UserInterface {
 	 */
 	private void checkoutMember() {
 		// TODO : implement this
-		LinkedList<String> display = new LinkedList<String>();
+		LinkedList<Result> display = new LinkedList<Result>();
 		LinkedList<Request> products = new LinkedList<Request>();
 		Request request = new Request();
 		System.out.println("Partially implemented.");
@@ -293,10 +293,10 @@ public class UserInterface {
 					done = true;
 				}
 			} while (!done);
-			Iterator<String> list = display.iterator();
+			Iterator<Result> list = display.iterator();
 			System.out.println("Product\tQty\tPrice\tTotal");
 			while (list.hasNext()) {
-				System.out.println(list.next());
+				System.out.println(list.next().getMessage());
 			}
 		}
 		Iterator<Request> items = products.iterator();

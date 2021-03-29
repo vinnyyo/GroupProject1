@@ -1,5 +1,8 @@
 package business.entities;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,5 +98,13 @@ public class Order implements Serializable {
 
 	public String toString() {
 		return orderId + "\t" + orderItem.getName() + "\t" + this.getDate() + "\t" + quantity;
+	}
+
+	public static void save(ObjectOutputStream output) throws IOException {
+		output.writeObject(idCounter);
+	}
+
+	public static void retrieve(ObjectInputStream input) throws IOException, ClassNotFoundException {
+		idCounter = (int) input.readObject();
 	}
 }

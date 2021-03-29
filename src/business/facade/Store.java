@@ -278,13 +278,15 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
-	public String checkoutMember(Request request) {
+	public Result checkoutMember(Request request) {
 		Product item = catalog.searchID(request.getProductId());
 		Transaction purchase = new Transaction(item, request.getQuantity());
 		Member customer = memberList.search(request.getMemberId());
 		customer.addTransaction(purchase);
 		item.setStock(item.getStock() - request.getQuantity());
-		return purchase.toString();
+		Result output = new Result();
+		output.setMessage(purchase.toString());
+		return output;
 	}
 
 	public Result checkForOrder(Request request) {
@@ -444,6 +446,7 @@ public class Store implements Serializable {
 			ObjectInputStream input = new ObjectInputStream(file);
 			store = (Store) input.readObject();
 			Member.retrieve(input);
+			Order.retrieve(input);
 			return store;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -465,6 +468,7 @@ public class Store implements Serializable {
 			ObjectOutputStream output = new ObjectOutputStream(file);
 			output.writeObject(store);
 			Member.save(output);
+			Order.save(output);
 			file.close();
 			return true;
 		} catch (IOException ioe) {
