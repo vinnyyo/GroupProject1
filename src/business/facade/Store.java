@@ -286,6 +286,7 @@ public class Store implements Serializable {
 		item.setStock(item.getStock() - request.getQuantity());
 		Result output = new Result();
 		output.setMessage(purchase.toString());
+		output.setProductPrice(purchase.getTotalPrice());
 		return output;
 	}
 
@@ -299,6 +300,8 @@ public class Store implements Serializable {
 			message += item.getName() + " has been ordered.\n";
 			message += order.toString();
 			output.setMessage(message);
+		} else {
+			output.setMessage(null);
 		}
 		return output;
 	}

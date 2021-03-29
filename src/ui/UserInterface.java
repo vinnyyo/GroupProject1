@@ -207,7 +207,7 @@ public class UserInterface {
 		request.setMemberAddress(inputString("Enter Address :"));
 		request.setMemberPhoneNumber(inputString("Enter Phone number :"));
 		request.setMemberFees(inputDouble("Enter Fee Paid :"));
-		request.setMemberJoinDate(new Date());
+		request.setMemberJoinDate(new Date(System.currentTimeMillis()));
 		Result result = store.enrollMember(request);
 		if (result.getSuccess()) {
 			System.out.println("Member enrolled.");
@@ -257,7 +257,7 @@ public class UserInterface {
 	 * Checkout member at the counter. Gets a list of product and quantity to order
 	 */
 	private void checkoutMember() {
-		// TODO : implement this
+		double total = 0.0;
 		LinkedList<Result> display = new LinkedList<Result>();
 		LinkedList<Request> products = new LinkedList<Request>();
 		Request request = new Request();
@@ -294,15 +294,20 @@ public class UserInterface {
 				}
 			} while (!done);
 			Iterator<Result> list = display.iterator();
-			System.out.println("Product\tQty\tPrice\tTotal");
+			System.out.println("Product\t\tQty\tPrice\tTotal");
 			while (list.hasNext()) {
-				System.out.println(list.next().getMessage());
+				result = list.next();
+				total += result.getProductPrice();
+				System.out.println(result.getMessage());
 			}
+			System.out.println("Order Total:\t\t" + formatPrice(total));
 		}
 		Iterator<Request> items = products.iterator();
 		while (items.hasNext()) {
 			Result status = store.checkForOrder(items.next());
-			System.out.println(status.getMessage());
+			if (status.getMessage() != null) {
+				System.out.println(status.getMessage());
+			}
 		}
 	}
 
@@ -347,7 +352,7 @@ public class UserInterface {
 		request.setNewProductPrice(productPrice);
 		Result result = store.changeProductPrice(request);
 		if (result.getSuccess()) {
-			System.out.println(result.getProductName() + " " + result.getProductPrice());
+			System.out.println(result.getProductName() + " " + formatPrice(result.getProductPrice()));
 		} else {
 			System.out.println("Operation failed, product not found.");
 		}
@@ -383,7 +388,7 @@ public class UserInterface {
 			Result curResult = iterator.next();
 			if (curResult.getMemberName().contains(searchString)) {
 				System.out.println(curResult.getMemberName() + " " + curResult.getMemberAddress() + " "
-						+ curResult.getMemberFees() + " " + curResult.getMemberId());
+						+ formatPrice(curResult.getMemberFees()) + " " + curResult.getMemberId());
 			}
 		}
 	}
