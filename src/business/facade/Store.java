@@ -18,6 +18,14 @@ import business.entities.iterators.SafeMemberIterator;
 import business.entities.iterators.SafeOrderIterator;
 import business.entities.iterators.SafeProductIterator;
 
+/**
+ * The facade representing the store and all its inventories. It is a singleton
+ * and has collection subclasses for MemberList, Catalog and PendingOrders. This
+ * class contains methods to safely utilize the store.
+ * 
+ * @author Micheal Olson, Vincent Peterson,
+ *
+ */
 public class Store implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -366,10 +374,11 @@ public class Store implements Serializable {
 	}
 
 	/**
-	 * This method takes an Order object and adds them to
+	 * This method takes an Order object and adds the quantity ordered to the
+	 * Product object's stock. Then deletes the order.
 	 * 
-	 * @param request
-	 * @return
+	 * @param request - the request with the orderId
+	 * @return a Result with the product and updated stock.
 	 */
 	public Result processShipment(Request request) {
 		Result output = new Result();
@@ -426,7 +435,7 @@ public class Store implements Serializable {
 	}
 
 	/**
-	 * gets a safe iterator for the orderss in PendingOrders
+	 * gets a safe iterator for the orders in PendingOrders
 	 * 
 	 * @return safe iterator for orders
 	 */
@@ -456,6 +465,12 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
+	/**
+	 * gets information about a member by id from the members list
+	 * 
+	 * @param request request from UI
+	 * @return result of the request
+	 */
 	public Result getMember(Request request) {
 		Result newResult = new Result();
 		Member member = memberList.search(request.getMemberId());
@@ -470,6 +485,12 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
+	/**
+	 * gets information about a order by id from the orders list
+	 * 
+	 * @param request request from UI
+	 * @return result of the request
+	 */
 	public Result getOrder(Request request) {
 		Result newResult = new Result();
 		Order order = orders.searchOrderId(request.getOrderId());
@@ -484,6 +505,15 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
+	/**
+	 * Takes in a member id and two dates and returns a list of Results containing
+	 * the string message of all transactions made by that member between the two
+	 * given dates.
+	 * 
+	 * @param request - containing the memberId and two Date objects.
+	 * @return a Linked List of Result objects containing the string of the
+	 *         transactions.
+	 */
 	public LinkedList<Result> printTransactions(Request request) {
 		LinkedList<Result> output = new LinkedList<Result>();
 		Member customer = memberList.search(request.getMemberId());
