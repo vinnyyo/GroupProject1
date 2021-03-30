@@ -149,15 +149,30 @@ public class Store implements Serializable {
 		}
 	}
 
+	/**
+	 * Collection class to hold orders of the store
+	 *
+	 */
 	private class PendingOrders implements Serializable, Iterable<Order> {
 
 		private static final long serialVersionUID = 1L;
 		private List<Order> orderItems = new LinkedList<Order>();
 
+		/**
+		 * adds an order to the collection
+		 * 
+		 * @param order to add
+		 */
 		public void addOrderItem(Order order) {
 			orderItems.add(order);
 		}
 
+		/**
+		 * searches for a order by id
+		 * 
+		 * @param orderId id of member to search for
+		 * @return order if successful, null if not
+		 */
 		public Order searchOrderId(int orderId) {
 			Iterator<Order> orderIterator = orderItems.iterator();
 			while (orderIterator.hasNext()) {
@@ -169,6 +184,12 @@ public class Store implements Serializable {
 			return null;
 		}
 
+		/**
+		 * removes a order from the collection
+		 * 
+		 * @param orderId id of order to remove
+		 * @return the order that was deleted or null if it was not found
+		 */
 		public Order deleteOrderItem(int orderId) {
 			Order item = this.searchOrderId(orderId);
 			if (item == null) {
@@ -178,6 +199,13 @@ public class Store implements Serializable {
 			return item;
 		}
 
+		/**
+		 * Returns a boolean value representing if there is a order for the specified
+		 * product.
+		 * 
+		 * @param product - the product to look for
+		 * @return true if the product is in the list of orders, false if it is not.
+		 */
 		public boolean contains(Product product) {
 			Iterator<Order> orderIterator = orderItems.iterator();
 			while (orderIterator.hasNext()) {
@@ -189,6 +217,9 @@ public class Store implements Serializable {
 			return false;
 		}
 
+		/**
+		 * iterator for the PendingOrders
+		 */
 		@Override
 		public Iterator<Order> iterator() {
 			return orderItems.iterator();
@@ -288,6 +319,15 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
+	/**
+	 * This method takes in a request with the product id, member id, and amount
+	 * purchased then creates a transaction object and adds the transaction to the
+	 * members record.
+	 * 
+	 * @param request - a request with the product id, member id, and amount
+	 *                purchased
+	 * @return a result with the transaction string and total price.
+	 */
 	public Result checkoutMember(Request request) {
 		Product item = catalog.searchID(request.getProductId());
 		Transaction purchase = new Transaction(item, request.getQuantity());
@@ -300,6 +340,15 @@ public class Store implements Serializable {
 		return output;
 	}
 
+	/**
+	 * This method takes in a product id and if the order level is higher than the
+	 * stock level of that object and there is not already an order for that
+	 * product, then creates an order for twice the reorder level.
+	 * 
+	 * @param request - the request containing the product id
+	 * @return a result object containing null if no order was made else it returns
+	 *         a message that the order was made.
+	 */
 	public Result checkForOrder(Request request) {
 		Result output = new Result();
 		Product item = catalog.searchID(request.getProductId());
@@ -316,6 +365,12 @@ public class Store implements Serializable {
 		return output;
 	}
 
+	/**
+	 * This method takes an Order object and adds them to
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public Result processShipment(Request request) {
 		Result output = new Result();
 		Order order = orders.deleteOrderItem(request.getOrderId());

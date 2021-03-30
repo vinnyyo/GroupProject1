@@ -18,6 +18,14 @@ import business.facade.Request;
 import business.facade.Result;
 import business.facade.Store;
 
+/**
+ * This class implements the user interface for the Store application. The
+ * commands are encoded as integers using static constants. The methods
+ * contained in this class are for the maintenance of the store's data.
+ * 
+ * @author Vincent Peterson, Micheal Olson,
+ */
+
 public class UserInterface {
 
 	private static UserInterface userInterface;
@@ -254,7 +262,9 @@ public class UserInterface {
 	}
 
 	/**
-	 * Checkout member at the counter. Gets a list of product and quantity to order
+	 * Checkout member at the counter. Requests for the memberId, the ID's of the
+	 * products and quantities that correlate with those. If the product runs low on
+	 * stock the method checks if the item needs to be ordered.
 	 */
 	private void checkoutMember() {
 		double total = 0.0;
@@ -311,10 +321,10 @@ public class UserInterface {
 	}
 
 	/**
-	 * Process a received shipment to the store
+	 * Process a received shipment to the store. Enters the ordeId of the shipment,
+	 * updates the product stock then deletes the order.
 	 */
 	private void processShipment() {
-		// TODO : implement this
 		System.out.println("Process Shipment.");
 		Request request = new Request();
 		Result result = new Result();
@@ -340,7 +350,8 @@ public class UserInterface {
 	}
 
 	/**
-	 * Changes the price of a product in the store Requires product id
+	 * Changes the price of a product in the store Requires product id and the new
+	 * price of the product.
 	 */
 	private void changeProductPrice() {
 		Request request = new Request();
@@ -358,7 +369,8 @@ public class UserInterface {
 	}
 
 	/**
-	 * Searches for all product that matches a string given.
+	 * Searches for all product that matches a string given. And displays them to
+	 * the user.
 	 */
 	private void getProductInfo() {
 		System.out.println("Get product info.");
@@ -377,7 +389,8 @@ public class UserInterface {
 	}
 
 	/**
-	 * Searches the store for all members with a matching Name
+	 * Searches the store for all members with a matching Name. And displays them to
+	 * the user.
 	 */
 	private void getMemberInfo() {
 		System.out.println("Get member info.");
@@ -395,7 +408,7 @@ public class UserInterface {
 	}
 
 	/**
-	 * Print all transactions from a member between requested dates
+	 * Prints all transactions from a member between the requested dates.
 	 */
 	private boolean printTransations() {
 		System.out.println("Print transactions.");
@@ -456,7 +469,7 @@ public class UserInterface {
 	}
 
 	/**
-	 * gets a list of all members of the store memberList
+	 * Displays a list of all members of the store memberList
 	 */
 	private void getMemberList() {
 		SafeMemberIterator iterator = store.getMemberList();
@@ -470,7 +483,7 @@ public class UserInterface {
 	}
 
 	/**
-	 * gets a list of all product in the store catalog
+	 * Displays a list of all products in the store catalog
 	 */
 	private void getProductList() {
 		SafeProductIterator iterator = store.getProductList();

@@ -7,6 +7,14 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * An Order object that represents an order made from the store. The fields
+ * include a product object, the quantity ordered, the order ID and the date the
+ * order was placed.
+ * 
+ * @author Vincent Peterson,
+ *
+ */
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -84,6 +92,7 @@ public class Order implements Serializable {
 
 	/**
 	 * gets date of creation
+	 * 
 	 * @return date
 	 */
 	public String getDate() {
@@ -93,6 +102,7 @@ public class Order implements Serializable {
 
 	/**
 	 * adds an order for the item
+	 * 
 	 * @return true
 	 */
 	public boolean addOrder() {
@@ -102,6 +112,7 @@ public class Order implements Serializable {
 
 	/**
 	 * checks to see if the order matches the id
+	 * 
 	 * @param id id to compare
 	 * @return true if they match
 	 */
@@ -113,11 +124,12 @@ public class Order implements Serializable {
 	 * returns a formatted string for the order
 	 */
 	public String toString() {
-		return orderId + "\t" + orderItem.getName() + "\t" + this.getDate() + "\t" + quantity;
+		return "ID: " + orderId + "\t" + orderItem.getName() + "\t" + this.getDate() + "\tAmount: " + quantity;
 	}
 
 	/**
 	 * saves the order id to file
+	 * 
 	 * @param output file to save it to
 	 * @throws IOException file error
 	 */
@@ -127,8 +139,9 @@ public class Order implements Serializable {
 
 	/**
 	 * reads the order id from a file
+	 * 
 	 * @param input file to read from
-	 * @throws IOException file error
+	 * @throws IOException            file error
 	 * @throws ClassNotFoundException
 	 */
 	public static void retrieve(ObjectInputStream input) throws IOException, ClassNotFoundException {
