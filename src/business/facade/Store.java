@@ -178,6 +178,17 @@ public class Store implements Serializable {
 			return item;
 		}
 
+		public boolean contains(Product product) {
+			Iterator<Order> orderIterator = orderItems.iterator();
+			while (orderIterator.hasNext()) {
+				Order cursor = orderIterator.next();
+				if (cursor.getOrderItem().getId().equals(product.getId())) {
+					return true;
+				}
+			}
+			return false;
+		}
+
 		@Override
 		public Iterator<Order> iterator() {
 			return orderItems.iterator();
@@ -292,7 +303,7 @@ public class Store implements Serializable {
 	public Result checkForOrder(Request request) {
 		Result output = new Result();
 		Product item = catalog.searchID(request.getProductId());
-		if (item.getStock() <= item.getReOrderLevel()) {
+		if (item.getStock() <= item.getReOrderLevel() && !orders.contains(item)) {
 			String message = "";
 			Order order = new Order(item, item.getReOrderLevel() * 2);
 			orders.addOrderItem(order);
