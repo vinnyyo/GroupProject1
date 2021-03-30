@@ -311,7 +311,7 @@ public class UserInterface {
 	}
 
 	/**
-	 * not implemented - will process a received shipment to the store
+	 * Process a received shipment to the store
 	 */
 	private void processShipment() {
 		// TODO : implement this
@@ -393,7 +393,7 @@ public class UserInterface {
 	}
 
 	/**
-	 * Not implemented - should print all transactions from Members
+	 * Print all transactions from a member between requested dates
 	 */
 	private boolean printTransations() {
 		System.out.println("Print transactions.");

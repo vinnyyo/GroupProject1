@@ -67,6 +67,9 @@ public class Transaction implements Serializable {
 		return item.getPrice() * amountPurchased;
 	}
 
+	/**
+	 * Nicely formatted string for the transaction
+	 */
 	public String toString() {
 		DecimalFormat df = new DecimalFormat("###,##0.00");
 		String output = item.getName() + "\t";
