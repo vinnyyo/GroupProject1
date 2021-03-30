@@ -261,7 +261,6 @@ public class UserInterface {
 		LinkedList<Result> display = new LinkedList<Result>();
 		LinkedList<Request> products = new LinkedList<Request>();
 		Request request = new Request();
-		System.out.println("Partially implemented.");
 		boolean done = false;
 		System.out.println("Member Checkout:");
 		int memberId = inputInteger("Enter Member ID:");
@@ -277,7 +276,7 @@ public class UserInterface {
 					if (result.getSuccess()) {
 						products.add(request);
 						count = inputInteger("Enter amount : ");
-						if ((count > 0) && (count < result.getProductStock())) {
+						if ((count > 0) && (count <= result.getProductStock())) {
 							// Add the product, and count to a transaction list.
 							request.setQuantity(count);
 							display.add(store.checkoutMember(request));
@@ -312,7 +311,7 @@ public class UserInterface {
 	}
 
 	/**
-	 * not implemented - will process a received shipment to the store
+	 * Process a received shipment to the store
 	 */
 	private void processShipment() {
 		// TODO : implement this
@@ -396,7 +395,7 @@ public class UserInterface {
 	}
 
 	/**
-	 * Not implemented - should print all transactions from Members
+	 * Print all transactions from a member between requested dates
 	 */
 	private boolean printTransations() {
 		System.out.println("Print transactions.");

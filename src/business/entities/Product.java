@@ -95,10 +95,20 @@ public class Product implements Serializable {
 		this.reOrderLevel = reOrderLevel;
 	}
 	
+	/**
+	 * Check to see if the name matches 
+	 * @param name name to compare
+	 * @return true if successful
+	 */
 	public boolean matchesName(String name) {
 		return (name.equalsIgnoreCase(this.name));
 	}
 	
+	/**
+	 * Checks to see if an id matches
+	 * @param id id to compare
+	 * @return true if they match
+	 */
 	public boolean matchesID(String id) {
 		return (id.equalsIgnoreCase(this.id));
 	}

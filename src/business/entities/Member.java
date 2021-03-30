@@ -83,30 +83,65 @@ public class Member implements Serializable {
 		return fees;
 	}
 
+	/**
+	 * gets the current value of the counter
+	 * @return value of the counter
+	 */
 	public int getIdCounter() {
 		return idCounter;
 	}
 
+	/**
+	 * Saves the idCounter for Member
+	 * @param output where to write the info
+	 * @throws IOException file error
+	 */
 	public static void save(ObjectOutputStream output) throws IOException {
 		output.writeObject(idCounter);
 	}
 
+	/**
+	 * Reads idCounter from file
+	 * @param input file to get the info
+	 * @throws IOException file error
+	 * @throws ClassNotFoundException class error
+	 */
 	public static void retrieve(ObjectInputStream input) throws IOException, ClassNotFoundException {
 		idCounter = (int) input.readObject();
 	}
 
+	/**
+	 * Function to see if member id matches given id
+	 * @param id id to check
+	 * @return true if matches
+	 */
 	public boolean matchesID(int id) {
 		return (id == this.id);
 	}
 
+	/**
+	 * adds a transaction the member has done
+	 * @param item item in transaction
+	 * @param amount number of items in transaction
+	 * @return true or false if successful
+	 */
 	public boolean addTransaction(Product item, int amount) {
 		return transactions.add(new Transaction(item, amount));
 	}
 
+	/**
+	 * adds a transaction the member has done
+	 * @param transaction the transaction
+	 * @return true or false if successful
+	 */
 	public boolean addTransaction(Transaction transaction) {
 		return transactions.add(transaction);
 	}
 
+	/**
+	 * returns a linked list of the members transactions
+	 * @return transaction list
+	 */
 	public LinkedList<Transaction> getTransactions() {
 		return transactions;
 	}

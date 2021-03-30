@@ -82,28 +82,55 @@ public class Order implements Serializable {
 		this.createdDate = createdDate;
 	}
 
+	/**
+	 * gets date of creation
+	 * @return date
+	 */
 	public String getDate() {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(createdDate);
 	}
 
+	/**
+	 * adds an order for the item
+	 * @return true
+	 */
 	public boolean addOrder() {
 		orderItem.setStock(orderItem.getStock() + quantity);
 		return true;
 	}
 
+	/**
+	 * checks to see if the order matches the id
+	 * @param id id to compare
+	 * @return true if they match
+	 */
 	public boolean matchesId(int id) {
 		return orderId == id;
 	}
 
+	/**
+	 * returns a formatted string for the order
+	 */
 	public String toString() {
 		return orderId + "\t" + orderItem.getName() + "\t" + this.getDate() + "\t" + quantity;
 	}
 
+	/**
+	 * saves the order id to file
+	 * @param output file to save it to
+	 * @throws IOException file error
+	 */
 	public static void save(ObjectOutputStream output) throws IOException {
 		output.writeObject(idCounter);
 	}
 
+	/**
+	 * reads the order id from a file
+	 * @param input file to read from
+	 * @throws IOException file error
+	 * @throws ClassNotFoundException
+	 */
 	public static void retrieve(ObjectInputStream input) throws IOException, ClassNotFoundException {
 		idCounter = (int) input.readObject();
 	}
