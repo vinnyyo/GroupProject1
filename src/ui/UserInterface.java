@@ -352,7 +352,7 @@ public class UserInterface {
 		request.setNewProductPrice(productPrice);
 		Result result = store.changeProductPrice(request);
 		if (result.getSuccess()) {
-			System.out.println(result.getProductName() + " " + formatPrice(result.getProductPrice()));
+			System.out.println(result.getProductName() + " is now " + formatPrice(result.getProductPrice()));
 		} else {
 			System.out.println("Operation failed, product not found.");
 		}
@@ -366,11 +366,12 @@ public class UserInterface {
 		String searchString = inputString("Enter search string : ");
 		SafeProductIterator iterator = store.getProductList();
 		System.out.println("Product that matches:");
+		System.out.println("Product\t\tID\tPrice\tStock\tReorder Level");
 		while (iterator.hasNext()) {
 			Result curResult = iterator.next();
 			if (curResult.getProductName().contains(searchString)) {
-				System.out.println(curResult.getProductName() + " " + curResult.getProductId() + " "
-						+ formatPrice(curResult.getProductPrice()) + " " + curResult.getProductStock() + " "
+				System.out.println(curResult.getProductName() + "\t\t" + curResult.getProductId() + "\t"
+						+ formatPrice(curResult.getProductPrice()) + "\t" + curResult.getProductStock() + "\t"
 						+ curResult.getProductReOrderLevel());
 			}
 		}
@@ -384,11 +385,12 @@ public class UserInterface {
 		String searchString = inputString("Enter search string : ");
 		SafeMemberIterator iterator = store.getMemberList();
 		System.out.println("Members that matches");
+		System.out.println("Name\t\tAddress\t\tFee Paid\tID");
 		while (iterator.hasNext()) {
 			Result curResult = iterator.next();
 			if (curResult.getMemberName().contains(searchString)) {
-				System.out.println(curResult.getMemberName() + " " + curResult.getMemberAddress() + " "
-						+ formatPrice(curResult.getMemberFees()) + " " + curResult.getMemberId());
+				System.out.println(curResult.getMemberName() + "\t" + curResult.getMemberAddress() + "\t"
+						+ formatPrice(curResult.getMemberFees()) + "\t" + curResult.getMemberId());
 			}
 		}
 	}
@@ -407,6 +409,7 @@ public class UserInterface {
 			Date date1 = new SimpleDateFormat("MM/dd/yyyy").parse(dateString1);
 			String dateString2 = inputString("Enter the end date in format mm/dd/yyyy");
 			Date date2 = new SimpleDateFormat("MM/dd/yyyy").parse(dateString2);
+			date2.setTime(date2.getTime() + 86400000);
 			if (date1.compareTo(date2) > 0) {
 				System.out.println("Invalid dates entered.");
 				return false;
@@ -417,11 +420,11 @@ public class UserInterface {
 			System.out.println("Please enter valid dates.");
 			return false;
 		}
-		LinkedList<String> read = store.printTransactions(request);
-		Iterator<String> list = read.iterator();
+		LinkedList<Result> read = store.printTransactions(request);
+		Iterator<Result> list = read.iterator();
 		String firstString = null;
 		if (list.hasNext()) {
-			firstString = list.next();
+			firstString = list.next().getMessage();
 			if (firstString.equals("Error invalid member ID!")) {
 				System.out.println(firstString);
 				return false;
@@ -434,7 +437,7 @@ public class UserInterface {
 		System.out.println("Product\t\tQty\tPrice\tTotal");
 		System.out.println(firstString);
 		while (list.hasNext()) {
-			System.out.println(list.next());
+			System.out.println(list.next().getMessage());
 		}
 		return true;
 	}
@@ -445,13 +448,12 @@ public class UserInterface {
 	private void listOutstandingOrders() {
 		SafeOrderIterator iterator = store.getOrderList();
 		System.out.println("Order List:");
+		System.out.println("ID\tProduct\t\tDate Placed\tAmount Ordered");
 		while (iterator.hasNext()) {
 			Result currentResult = iterator.next();
-			System.out.println(currentResult.getOrderId() + " " + currentResult.getProductName() + " "
-					+ currentResult.getOrderCreatedDate() + " " + currentResult.getOrderQuantity());
+			System.out.println(currentResult.getOrderId() + "\t" + currentResult.getProductName() + "\t\t"
+					+ formatDate(currentResult.getOrderCreatedDate()) + "\t" + currentResult.getOrderQuantity());
 		}
-		System.out.println("Not implemented");
-
 	}
 
 	/**
@@ -460,10 +462,11 @@ public class UserInterface {
 	private void getMemberList() {
 		SafeMemberIterator iterator = store.getMemberList();
 		System.out.println("Member List:");
+		System.out.println("Name\t\tDate Joined\tAddress\t\tPhone");
 		while (iterator.hasNext()) {
 			Result curResult = iterator.next();
-			System.out.println(curResult.getMemberName() + " " + curResult.getMemberJoinDate() + " "
-					+ curResult.getMemberAddress() + " " + curResult.getMemberPhoneNumber());
+			System.out.println(curResult.getMemberName() + "\t" + formatDate(curResult.getMemberJoinDate()) + "\t"
+					+ curResult.getMemberAddress() + "\t" + curResult.getMemberPhoneNumber());
 		}
 	}
 
@@ -473,10 +476,11 @@ public class UserInterface {
 	private void getProductList() {
 		SafeProductIterator iterator = store.getProductList();
 		System.out.println("Product List:");
+		System.out.println("Product\t\tID\tStock\tPrice\tReorder Level");
 		while (iterator.hasNext()) {
 			Result curResult = iterator.next();
-			System.out.println(curResult.getProductName() + " " + curResult.getProductId() + " "
-					+ curResult.getProductStock() + " " + formatPrice(curResult.getProductPrice()) + " "
+			System.out.println(curResult.getProductName() + "\t\t" + curResult.getProductId() + "\t"
+					+ curResult.getProductStock() + "\t" + formatPrice(curResult.getProductPrice()) + "\t"
 					+ curResult.getProductReOrderLevel());
 		}
 	}

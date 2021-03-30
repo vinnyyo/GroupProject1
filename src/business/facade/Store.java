@@ -429,11 +429,13 @@ public class Store implements Serializable {
 		return newResult;
 	}
 
-	public LinkedList<String> printTransactions(Request request) {
-		LinkedList<String> output = new LinkedList<String>();
+	public LinkedList<Result> printTransactions(Request request) {
+		LinkedList<Result> output = new LinkedList<Result>();
 		Member customer = memberList.search(request.getMemberId());
 		if (customer == null) {
-			output.add("Error invalid member ID!");
+			Result result1 = new Result();
+			result1.setMessage("Error invalid member ID!");
+			output.add(result1);
 			return output;
 		}
 		LinkedList<Transaction> transactions = customer.getTransactions();
@@ -441,7 +443,9 @@ public class Store implements Serializable {
 		while (list.hasNext()) {
 			Transaction purchase = list.next();
 			if (purchase.compareTo(request.getStartDate()) >= 0 && purchase.compareTo(request.getEndDate()) <= 0) {
-				output.add(purchase.toString());
+				Result result2 = new Result();
+				result2.setMessage(purchase.toString());
+				output.add(result2);
 			}
 		}
 		return output;
