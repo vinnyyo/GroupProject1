@@ -268,7 +268,6 @@ public class Store implements Serializable {
 			newResult.setSuccess(Result.OPERATION_SUCCESSFUL);
 			newResult.setStatus(Result.PRODUCT_ADDED);
 			newResult.setProduct(product);
-			// TODO : add code to order 2 x product.getProductReOrderLevel()
 			orders.addOrderItem(new Order(product, product.getReOrderLevel() * 2));
 		} else {
 			newResult.setSuccess(Result.OPERATION_FAILURE);
