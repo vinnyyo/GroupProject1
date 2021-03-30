@@ -450,8 +450,6 @@ public class UserInterface {
 			System.out.println(currentResult.getOrderId() + " " + currentResult.getProductName() + " "
 					+ currentResult.getOrderCreatedDate() + " " + currentResult.getOrderQuantity());
 		}
-		System.out.println("Not implemented");
-
 	}
 
 	/**
