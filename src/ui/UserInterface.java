@@ -261,7 +261,6 @@ public class UserInterface {
 		LinkedList<Result> display = new LinkedList<Result>();
 		LinkedList<Request> products = new LinkedList<Request>();
 		Request request = new Request();
-		System.out.println("Partially implemented.");
 		boolean done = false;
 		System.out.println("Member Checkout:");
 		int memberId = inputInteger("Enter Member ID:");
