@@ -277,7 +277,7 @@ public class UserInterface {
 					if (result.getSuccess()) {
 						products.add(request);
 						count = inputInteger("Enter amount : ");
-						if ((count > 0) && (count < result.getProductStock())) {
+						if ((count > 0) && (count <= result.getProductStock())) {
 							// Add the product, and count to a transaction list.
 							request.setQuantity(count);
 							display.add(store.checkoutMember(request));
