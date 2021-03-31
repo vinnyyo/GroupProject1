@@ -235,7 +235,7 @@ public class UserInterface {
 		request.setMemberId(memberId);
 		Result result = store.removeMember(request);
 		if (result.getSuccess()) {
-			System.out.println("Member " + memberId + "removed.");
+			System.out.println("Member " + memberId + " removed.");
 		} else {
 			System.out.println("Member not found.");
 		}
