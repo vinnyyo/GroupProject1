@@ -330,7 +330,6 @@ public class UserInterface {
 		Result result = new Result();
 		boolean done = false;
 		do {
-			int count = 0;
 			int idInput = inputInteger("Enter Order ID (0 to finish):");
 			if (idInput != 0) {
 				request.setOrderId(idInput);
